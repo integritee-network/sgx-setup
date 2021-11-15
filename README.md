@@ -1,14 +1,6 @@
-# Requirements
-* Ansible v2.8 is required on your HOST (provisioner) system.
-* You must have `sshpass` installed on your HOST (provisioner) not on the GUEST (machine(s) being provisioned).
-* the GUEST machine must be on Ubuntu 20.04 (still oparating on ubuntu 18.04? Contact us, we have a script for that one as well)
-* SGX must be enabled in your BIOS
-
-## Important Notice
-Currently, some ansible scripts (such as the munin-node, timezone and keyboard roles) are outdated. These are not necesary for the set up of a sgx machine but are good extra features. They might be updated at a later point of time. If urgently needed, take a look at https://github.com/geerlingguy , up-to-date ansible scripts should be found there.
-
 
 # Step by Step (Development Server)
+
 There are two different `ansible.yml` files:
 1. [BuildServersSGX.yml](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/BuildServersSGX.yml) : used for continuous build servers, not for active developing. Hence no user and other roles included.
 2. [DevelopmentServersSGX.yml](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml) : used for development server that support muliple accounts.
@@ -18,6 +10,14 @@ In this tutorial, the development server is focused on. A build server tutorial 
 - `role-andrewrothstein.gcc-toolbox` (installs gcc, necessary to install sgxsdk and driver)
 - `role-intel-sgx`. More information on that one needed? Take a look at its [README](https://github.com/integritee-network/sgx-setup/tree/add-readme/sgx-ansible/roles/role-intel-sgx)
 - `role-singleplatform-eng.users` to set up user. Not necessary to actually run a sgx-machine but is recommended in case of multiple users accessing the same machine.
+
+The other roles (such as the munin-node, timezone and keyboard roles) are not tested for ubunutu 20.04 and might be outdated. However, these are not necesary for the set up of a sgx machine but are good extra features. They might be updated at a later point of time. If urgently needed, take a look at https://github.com/geerlingguy , up-to-date ansible scripts should be found there.
+
+## Requirements
+* Ansible v2.8 is required on your HOST (provisioner) system.
+* You must have `sshpass` installed on your HOST (provisioner) not on the GUEST (machine(s) being provisioned).
+* the GUEST machine must be on Ubuntu 20.04 (still oparating on ubuntu 18.04? Contact us, we have a script for that one as well)
+* SGX must be enabled in your BIOS
 
 ## Steps
 
