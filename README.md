@@ -4,8 +4,6 @@
 * the GUEST machine must be on Ubuntu 20.04 (still oparating on ubuntu 18.04? Contact us, we have a script for that one as well)
 * SGX must be enabled in your BIOS
 
-In this tutorial, the development server is focused on. A build server tutorial might follow later.
-
 ## Important Notice
 Currently, some ansible scripts (such as the munin-node, timezone and keyboard roles) are outdated. These are not necesary for the set up of a sgx machine but are good extra features. They might be updated at a later point of time. If urgently needed, take a look at https://github.com/geerlingguy , up-to-date ansible scripts should be found there.
 
@@ -15,6 +13,13 @@ There are two different `ansible.yml` files:
 1. [BuildServersSGX.yml](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/BuildServersSGX.yml) : used for continuous build servers, not for active developing. Hence no user and other roles included.
 2. [DevelopmentServersSGX.yml](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml) : used for development server that support muliple accounts.
 
+In this tutorial, the development server is focused on. A build server tutorial might follow later. The following roles are executed:
+- `role-install-tools` (installs a basic toolbox necessary to install sgxsdk and driver). The tools that will be installed can be looked at [here](https://github.com/integritee-network/sgx-setup/blob/add-readme/sgx-ansible/roles/role-install-tools/tasks/main.yml)
+- `role-andrewrothstein.gcc-toolbox` (installs gcc, necessary to install sgxsdk and driver)
+- `role-intel-sgx`. More information on that one needed? Take a look at its [README](https://github.com/integritee-network/sgx-setup/tree/add-readme/sgx-ansible/roles/role-intel-sgx)
+- `role-singleplatform-eng.users` to set up user. Not necessary to actually run a sgx-machine but is recommended in case of multiple users accessing the same machine.
+
+## Steps
 
 * Add your server to the [host variables](https://github.com/integritee-network/sgx-setup/tree/main/sgx-ansible/host_vars). An example host can be found in [sgx-ansible/host_vars/examplehost.domain-ad.example.ch.yml](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/host_vars/examplehost.domain-ad.example.ch.yml). Set the `ansible_user` and `ansible_host` according to your sgx-server name. Ignore the netplan, munin-node, pkcs12 and nginx information for now. This will only become important when actually setting up these tools, which is not yet supported.
 * Install the basic tools on your host system by running the ansible install-tools :
@@ -53,7 +58,7 @@ To show which host will be provisioned, execute the upper command with the optio
 
 To do a dry-run, execute the upper command with the options `--check --diff`.
 
-# Check if SGX is enabled
+## Check if SGX is enabled
 Smoke Tests are failing even though sgx driver and sdk have been successfully installed? Then maybe sgx is not enabled in the BIOS.
 To check if sgx is enabled in your BIOS you can do the following (only after running the sgx-ansible script)
 
