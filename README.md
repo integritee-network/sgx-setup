@@ -111,3 +111,21 @@ The meaning of the output value is listed here:
 * SGX_DISABLED_HYPERV_ENABLED = 6, /* Detected an unsupported version of Windows* 10 with Hyper-V enabled */
 * SGX_DISABLED_UNSUPPORTED_CPU = 7, /* SGX is not supported by this CPU */
 ```
+
+
+# Intel sgx driver not available anymore after a kernel update
+If the system was updated (for example due to a restart), it may be that the intel sgx driver is not reloaded and no sgx-device is available anymore.
+
+The kernel version can be checked with:
+```bash
+$ uname -r
+```
+
+The installed intel sgx-driver can be checked with:
+```bash
+$ cat /opt/intel/installed-intel-sgx-driver-version.txt
+```
+If the kernel version on the file and uname are different, the driver needs to be reinstalled. To do this, simple activate the
+`role-intel-sgx` in the runbook and execute according to [Ansible Script Execution](https://github.com/integritee-network/sgx-setup/tree/add-readme#ansible-script-execution).
+
+After a login, the driver should be installed for the correct version. A reboot is not necessary.
