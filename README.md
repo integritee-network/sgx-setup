@@ -16,23 +16,23 @@ The other roles (such as the munin-node, timezone and keyboard roles) are not ye
 ## Requirements
 * Ansible v2.8 is required on your HOST (provisioner) system.
 * You must have `sshpass` installed on your HOST (provisioner) not on the GUEST (machine(s) being provisioned).
-* the GUEST machine must be on Ubuntu 20.04 (still oparating on ubuntu 18.04? Contact us, we have a script for that one as well)
+* the GUEST machine must be on Ubuntu 20.04 (still oparating on Ubuntu 18.04? Contact us, we have a script for that one as well)
 * SGX must be enabled in your BIOS
 
 ## Steps
 
-* Add your server to the [host variables](https://github.com/integritee-network/sgx-setup/tree/main/sgx-ansible/host_vars). An example host can be found in [sgx-ansible/host_vars/examplehost.domain-ad.example.ch.yml](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/host_vars/examplehost.domain-ad.example.ch.yml). Set the `ansible_user` and `ansible_host` according to your sgx-server name. Ignore the netplan, munin-node, pkcs12 and nginx information for now. This will only become important when actually setting up these tools, which is not yet supported.
-* Install the basic tools on your host system by running the ansible install-tools :
+1. Add your server to the [host variables](https://github.com/integritee-network/sgx-setup/tree/main/sgx-ansible/host_vars). An example host can be found in [sgx-ansible/host_vars/examplehost.domain-ad.example.ch.yml](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/host_vars/examplehost.domain-ad.example.ch.yml). Set the `ansible_user` and `ansible_host` according to your sgx-server name. Ignore the netplan, munin-node, pkcs12 and nginx information for now. This will only become important when actually setting up these tools, which is not yet supported.
+2. Install the basic tools on your host system by running the ansible install-tools :
     1. Activate the [role-install-tools](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml#L19) in [DevelopmentServersSGX.yml](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml)
     2. Execute the script according to [Ansible Script Execution](https://github.com/integritee-network/sgx-setup/tree/add-readme#ansible-script-execution).
-* Install gcc-tools :
+3. Install gcc-tools :
     1. Uncomment the [role-andrewrothstein.gcc-toolbox](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml#L20) in [DevelopmentServersSGX.yml](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml) (Don't forget to recomment previously executed roles)
     2. Execute the script according to [Ansible Script Execution](https://github.com/integritee-network/sgx-setup/tree/add-readme#ansible-script-execution).
-* Install sgx-driver and sdk:
+4. Install sgx-driver and sdk:
     1. Activate the [role-intel-sgx](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml#L22) in [DevelopmentServersSGX.yml](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml) (Don't forget to recomment previously executed roles)
     2. Execute the script according to [Ansible Script Execution](https://github.com/integritee-network/sgx-setup/tree/add-readme#ansible-script-execution).
     3. In case the smoke tests have passed: Congratulation: You have successfully set up an sgx machine :) In case they did not, but the script executed without any errors, take a look at here: [Check if sgx is enabled in BIOS](check-if-sgx-is-enabled). If that still does not fix it, create an [issue](https://github.com/integritee-network/sgx-setup/issues/new) and so we can try to help you out.
-* Set up Users:
+5. Set up Users:
     1. Save the public key of the user in [sgx-setup/sgx-ansible/files/users/keys](https://github.com/integritee-network/sgx-setup/tree/main/sgx-ansible/files/users/keys), just like the  [example.users.pub](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/files/users/keys/example.user.pub)
     2. Save the user in the [group_vars](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/group_vars/developmentServersSGX.yml), just like it has been done for the Example User.
     3. Activate the role in [role-singleplatform-eng.users](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml#L18) in [DevelopmentServersSGX.yml](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml) (Don't forget to recomment previously executed roles)
