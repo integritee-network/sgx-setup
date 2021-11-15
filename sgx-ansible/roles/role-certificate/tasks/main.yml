@@ -1,0 +1,30 @@
+---
+# certificate tasks
+
+- import_tasks: vars.yml
+  tags: [certificate_vars, always]
+
+- import_tasks: debug.yml
+  when: certificate_debug
+  tags: [certificate_debug, always]
+
+- import_tasks: packages.yml
+  tags: certificate_packages
+
+- import_tasks: cert-dirs.yml
+  tags: certificate_dirs
+
+- import_tasks: cert-pkcs12.yml
+  tags: certificate_pkcs12
+
+- import_tasks: cert-command.yml
+  tags: certificate_command
+
+- import_tasks: cert-self-signed.yml
+  tags: certificate_self_signed
+
+- import_tasks: cert-acme.yml
+  tags: certificate_acme
+
+# EOF
+...

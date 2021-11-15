@@ -1,0 +1,53 @@
+---
+ansible_domain: "domain-ad.example.ch"
+
+# list of groups to create, used by role-singleplatform-eng.users
+groups_to_create:
+  - name: examplegroup
+    gid: 99
+  - name: sshlogin
+
+# the following variable defines the users to be created, used by role-singleplatform-eng.users
+users:
+  - username: uexample
+    name: Example User
+    groups: ['examplegroup', 'sshlogin']
+    ssh_key:
+      - "{{ lookup('file', 'files/users/keys/example.user.pub') }}"
+
+# the following users may have been created in the past and must be deleted now
+users_deleted:
+  - username: uexample
+    remove: yes
+    force: yes
+
+# users to be added to the docker group
+# you need to run the docker role to get this applied
+docker_users: [ 'uexample' ]
+
+# the following variables refer to role-intel-sgx
+intel_sgx_umbrella_directory: "/opt/intel"
+
+# the version of the intel DCAP sgx driver for linux
+# provide the version from https://download.01.org/intel-sgx/sgx-linux/{{intel_sgx_SDK_PWD_version}}/distro/ubuntu20.04-server/
+# example: https://download.01.org/intel-sgx/sgx-linux/2.14/distro/ubuntu20.04-server/
+# Sidenote: Driver version will not be updated anymore - 1.41 (according to intel) is the last one that is not directly incoorperated into the
+# linux main kernel (from v5.11 on)
+intel_DCAP_DRIVER_version: "1.41"
+
+intel_sgx_DRIVER_directory: "linux-{{ intel_DCAP_DRIVER_version }}_DCAP_driver"
+intel_sgx_driver_installed_version_filename: "installed-intel-sgx-driver-version.txt"
+
+# the version of the intel sgx for linux
+# provide the selected version from https://download.01.org/intel-sgx/sgx-linux/
+intel_sgx_SDK_PWD_version: "2.14"
+
+intel_sgx_SDK_PWD_directory: "linux-sgx_{{ intel_sgx_SDK_PWD_version }}"
+intel_sgx_sdk_psw_linked_version_filename: "linked-sgx-sdk-version.txt"
+
+# LLVM version
+llvm_version: 10
+
+# Linux distribution
+linux_distro: ubuntu20.04
+linux_distro_name: focal

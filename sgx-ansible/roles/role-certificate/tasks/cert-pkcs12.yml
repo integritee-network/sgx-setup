@@ -1,0 +1,33 @@
+---
+- name: "Copy pkcs12 file"
+  copy:
+    src: "{{ item.pkcs12_file }}"
+    dest: "{{ certificate_dir_certs }}/{{ item.pkcs12_file }}"
+  loop: "{{ certificate_pkcs12 }}"
+  when: not ansible_check_mode
+
+- name: "cert-pkcs12: Extract crt from pkcs12"
+  command: >
+    openssl pkcs12 -in "{{ certificate_dir_certs }}/{{ item.pkcs12_file }}" -clcerts -nokeys
+    -out "{{ certificate_dir_certs }}/{{ item.crt }}"
+    -passin pass:{{ item.pkcs12_pass }}
+  args:
+    creates: "{{ certificate_dir_certs }}/{{ item.crt }}"
+  loop: "{{ certificate_pkcs12 }}"
+  when: not ansible_check_mode
+
+- name: "cert-pkcs12: Extract keys from pkcs12"
+  command: >
+    openssl pkcs12 -in "{{ certificate_dir_certs }}/{{ item.pkcs12_file }}" -nocerts -nodes
+    -out "{{ certificate_dir_private }}/{{ item.private }}"
+    -passin pass:{{ item.pkcs12_pass }}
+  args:
+    creates: "{{ certificate_dir_private }}/{{ item.private }}"
+  loop: "{{ certificate_pkcs12 }}"
+  when: not ansible_check_mode
+
+- name: "cert-pkcs12: Set permisions of private keys"
+  file:
+    path: "{{ certificate_dir_private }}/{{ item.private }}"
+    mode: "0600"
+  loop: "{{ certificate_pkcs12 }}"

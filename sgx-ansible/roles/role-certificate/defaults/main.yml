@@ -1,0 +1,59 @@
+---
+# certificate defaults
+
+certificate_debug: False
+
+certificate_packages_debian:
+  - python-openssl
+  - acme-tiny
+
+certificate_packages_freebsd:
+  - security/py-openssl
+  - security/py-acme-tiny
+
+certificate_packages_redhat:
+  - pyOpenSSL
+  - acme-tiny
+
+# FreeBSD
+# freebsd_install_method: "packages"
+freebsd_install_method: "ports"
+freebsd_use_packages: "yes"
+freebsd_install_retries: 10
+freebsd_install_delay: 5
+
+# Linux
+linux_install_retries: 10
+linux_install_delay: 5
+
+# ssl directories
+certificate_dir: "/etc/ssl"
+certificate_dir_csr: "{{ certificate_dir }}/csr"
+certificate_dir_certs: "{{ certificate_dir }}/certs"
+certificate_dir_private: "{{ certificate_dir }}/private"
+certificate_owner: "root"
+certificate_dir_mode: "0755"
+
+# acme directories
+certificate_acme_dir: "/etc/letsencrypt"
+certificate_acme_dir_csr: "{{ certificate_dir }}/csr"
+certificate_acme_dir_certs: "{{ certificate_dir }}/archive"
+certificate_acme_dir_private: "{{ certificate_dir }}/keys"
+certificate_acme_dir_challenges: "{{ certificate_dir }}/challenges"
+certificate_acme_owner: "root"
+certificate_acme_dir_mode: "0755"
+
+# copied pkcs12 certificates
+certificate_pkcs12: []
+
+# self-signed certs by openssl command
+certificate_self_signed_command: []
+
+# self-signed certs by openssl_certificate module
+certificate_self_signed: []
+
+# Lets Encrypt certs by openssl_certificate module
+certificate_acme: []
+
+# EOF
+...

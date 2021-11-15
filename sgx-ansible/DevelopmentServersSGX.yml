@@ -1,0 +1,28 @@
+---
+- hosts: developmentServersSGX
+  vars_prompt:
+    - name: "ansible_sudo_pass"
+      prompt: "Sudo password (development servers)"
+      private: yes
+    - name: "pkcs12_password"
+      prompt: "Password used to decrypt TLS certificates (development servers)"
+      private: yes
+  pre_tasks:
+    - name: Ping remote servers
+      ping:
+
+  roles:
+    # - { role: role-mrlesmithjr.netplan, become: yes }         # network configuration
+    # - { role: role-gantsign.keyboard, become: yes }           # pc104 CH keyboard
+    # - { role: role-manala.timezone, become: yes }             # Europe/Zurich
+    # - { role: role-singleplatform-eng.users, become: yes }    # create all users
+    # - { role: role-install-tools, become: yes }               # additional tools
+    # - { role: role-andrewrothstein.gcc-toolbox, become: yes } # gcc tools
+    # - { role: role-geerlingguy.docker, become: yes }          # docker
+    # - { role: role-intel-sgx, become: yes }                   # intel sgx driver and sdk
+    # - { role: role-geerlingguy.munin-node, become: yes}       # munin node
+    # - { role: role-bertvv.samba, become: yes}                 # samba share for file exchange
+    # - { role: role-certificate, become: yes } # activate only when pfx file received
+    # - { role: role-geerlingguy.certbot, become: yes} # generate a certificate using Let's Encrypt
+    # - { role: role-geerlingguy.nginx, become: yes} # activate only when reverse proxy used
+

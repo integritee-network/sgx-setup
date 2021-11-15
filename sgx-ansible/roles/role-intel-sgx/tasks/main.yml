@@ -1,0 +1,312 @@
+---
+  - name: Ask for uname
+    command: uname -r
+    register: kernel_version
+    changed_when: false
+
+  - name: "Checking if Intel SGX umbrella directory exists"
+    stat:
+      path: "{{ intel_sgx_umbrella_directory}}"
+    register: intel_sgx_directory_details
+
+  - name: "Create Intel SGX directory if it doesn't exist"
+    file:
+      path: "{{ intel_sgx_umbrella_directory }}"
+      state: directory
+      owner: "{{ ansible_user }}"
+      recurse: yes
+    when: intel_sgx_directory_details.stat.exists == false
+
+  # Install DCAP driver
+  - name: Check if any version of Intel SGX Driver is installed, based on the existence of a txt file
+    stat:
+      path: "{{ intel_sgx_umbrella_directory}}/{{ intel_sgx_driver_installed_version_filename }}"
+    register: intel_sgx_driver_exists
+    changed_when: False
+
+  - name: Install dependencies for intel DCAP SGX driver
+    apt:
+       name: ['build-essential',
+              'ocaml',
+              'automake',
+              'autoconf',
+              'libtool',
+              'libssl-dev',
+              'dkms']
+       state: present
+
+  - name: "Checking if Intel SGX DCAP Driver directory exists"
+    stat:
+      path: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_DRIVER_directory }}"
+    register: intel_sgx_driver_directory_details
+
+  - name: "Create Intel SGX DCAP Driver directory if it doesn't exist"
+    file:
+      path: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_DRIVER_directory }}"
+      state: directory
+      owner: "{{ ansible_user }}"
+      recurse: yes
+    when: intel_sgx_driver_directory_details.stat.exists == false
+
+  - name: Get DCAP SGX-Driver install binaries, in case it doesn't exist at all
+    get_url:
+      url: "https://download.01.org/intel-sgx/sgx-linux/{{ intel_sgx_SDK_PWD_version }}/distro/{{ linux_distro }}-server/sgx_linux_x64_driver_{{ intel_DCAP_DRIVER_version }}.bin"
+      dest: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_DRIVER_directory }}/"
+    when: intel_sgx_driver_exists.stat.exists == false
+
+  - name: Install SGX-Driver, in case it doesn't exist at all
+    script: intel-sgx-install-driver.sh {{ intel_DCAP_DRIVER_version }}
+    args:
+      chdir: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_DRIVER_directory }}/"
+    when: intel_sgx_driver_exists.stat.exists == false
+
+  - name: Create a txt file including the sgx driver version installed AND the kernel version, in case it doesn't exist at all
+    template:
+      src: installed-sgx-driver-and-kernel-vers.j2
+      dest: "{{ intel_sgx_umbrella_directory}}/{{ intel_sgx_driver_installed_version_filename }}"
+    when: intel_sgx_driver_exists.stat.exists == false
+
+  - name: Retrieve the installed sgx driver and kernel version
+    slurp:
+      src: "{{ intel_sgx_umbrella_directory}}/{{ intel_sgx_driver_installed_version_filename }}"
+    register: sgx_driver_kernel_version_installed
+    when: intel_sgx_driver_exists.stat.exists
+
+  - name: If only SGX driver mismatch detected - uninstall old sgx driver version
+    command: ./uninstall
+    args:
+      chdir: "{{ intel_sgx_umbrella_directory }}/sgxdriver/"
+    when:
+      - sgx_driver_kernel_version_installed is not skipped
+      - " intel_DCAP_DRIVER_version not in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
+      # - " kernel_version.stdout in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
+
+  - name: If SGX driver mismatch detected - get the desired SGX-Driver version
+    get_url:
+      url: "https://download.01.org/intel-sgx/sgx-linux/{{ intel_sgx_SDK_PWD_version }}/distro/{{ linux_distro }}-server/sgx_linux_x64_driver_{{ intel_DCAP_DRIVER_version }}.bin"
+      dest: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_DRIVER_directory }}/"
+    when:
+      - sgx_driver_kernel_version_installed is not skipped
+      - " intel_DCAP_DRIVER_version not in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
+      # - " kernel_version.stdout in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
+
+  - name: If SGX driver mismatch detected - install the desired SGX-Driver version
+    script: intel-sgx-install-driver.sh {{ intel_DCAP_DRIVER_version }}
+    args:
+      chdir: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_DRIVER_directory }}/"
+    when:
+      - sgx_driver_kernel_version_installed['content'] is defined
+      - " intel_DCAP_DRIVER_version not in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
+      # - " kernel_version.stdout in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
+
+  - name: If SGX driver mismatch detected - update the txt file with the new sgx driver version
+    template:
+      src: installed-sgx-driver-and-kernel-vers.j2
+      dest: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_driver_installed_version_filename }}"
+      force: yes
+    when:
+      - sgx_driver_kernel_version_installed is not skipped
+      - " intel_DCAP_DRIVER_version not in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
+      # - " kernel_version.stdout in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
+
+  - name: "Detect if there is a mismatch in the kernel version --> install the driver at the new version"
+    script: intel-sgx-install-driver.sh {{ intel_DCAP_DRIVER_version }}
+    args:
+      chdir: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_DRIVER_directory }}/"
+    when:
+      - sgx_driver_kernel_version_installed is not skipped
+      - " kernel_version.stdout not in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
+
+  - name: "Detect if there is a mismatch in the kernel version --> - update the txt file with the new sgx driver and kernel version"
+    template:
+      src: installed-sgx-driver-and-kernel-vers.j2
+      dest: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_driver_installed_version_filename }}"
+      force: yes
+    when:
+      - sgx_driver_kernel_version_installed is not skipped
+      - " kernel_version.stdout not in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
+
+  # SDK & PSW
+  - name: Install dependencies for SGX SDK and SGX PSW and AESM service
+    apt:
+       name: ['build-essential',
+              'ocaml',
+              'ocamlbuild',
+              'automake',
+              'autoconf',
+              'libtool',
+              'perl',
+              'libcurl4-openssl-dev',
+              'protobuf-compiler',
+              'libssl-dev',
+              'libprotobuf-dev',
+              'debhelper',
+              'reprepro' ]
+       state: present
+
+  - name: Install expect package
+    apt:
+       name: expect
+       state: present
+
+  - name: Test if Intel SGX SDK and PSW exist, based on the txt file
+    stat:
+      path: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_sdk_psw_linked_version_filename }}"
+    register: intel_sgx_sdk_psw_exists
+    changed_when: False
+
+  - name: Clone Intel SGX SDK and PSW, in case it doesn't exist at all
+    git:
+      repo: https://github.com/intel/linux-sgx.git
+      dest: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_SDK_PWD_directory }}/"
+      version: "sgx_{{ intel_sgx_SDK_PWD_version }}"
+    when: intel_sgx_sdk_psw_exists.stat.exists == false
+
+  - name: Install SGX SDK, in case it doesn't exist at all
+    script: install-sgx-sdk.sh {{ linux_distro }}
+    args:
+      chdir: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_SDK_PWD_directory }}/"
+    register: out
+    when: intel_sgx_sdk_psw_exists.stat.exists == false
+
+  - name: Create a symbolic link for sgxsdk, in case it doesn't exist at all
+    file:
+      src: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_SDK_PWD_directory }}/linux/installer/bin/sgxsdk"
+      dest: "{{ intel_sgx_umbrella_directory }}/sgxsdk"
+      state: link
+    when: intel_sgx_sdk_psw_exists.stat.exists == false
+
+  # Intall PSW
+  - name: Install SGX PSW, in case it doesn't exist at all
+    script: install-sgx-psw.sh {{ linux_distro_name }}
+    args:
+      chdir: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_SDK_PWD_directory }}/"
+    register: out
+    when: intel_sgx_sdk_psw_exists.stat.exists == false
+
+  # AESM
+  - name: Install AESM service
+    script: install-sgx-aesm.sh {{ linux_distro_name }}
+    when: intel_sgx_sdk_psw_exists.stat.exists == false
+
+  - name: Create a txt file including the sgx sdk version installed, in case it doesn't exist at all
+    copy:
+      content: "sgx_{{intel_sgx_SDK_PWD_version }}\n"
+      dest: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_sdk_psw_linked_version_filename }}"
+    when: intel_sgx_sdk_psw_exists.stat.exists == false
+
+  - name: Retrieve the installed sgx sdk version
+    slurp:
+      src: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_sdk_psw_linked_version_filename }}"
+    register: sgx_sdk_version_installed
+    when: intel_sgx_sdk_psw_exists.stat.exists
+
+  - name: If SGX SDK mismatch detected - clone the desired SGX-SDK version
+    git:
+      repo: https://github.com/intel/linux-sgx.git
+      dest: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_SDK_PWD_directory }}/"
+      version: "sgx_{{ intel_sgx_SDK_PWD_version }}"
+    when:
+      - sgx_sdk_version_installed is not skipped
+      - " intel_sgx_SDK_PWD_version not in sgx_sdk_version_installed['content'] | b64decode | trim "
+
+  - name: If SGX SDK mismatch detected - install SGX SDK desired version, usually takes around 5 mins on the SGX server
+    script: install-sgx-sdk.sh {{ linux_distro }}
+    args:
+      chdir: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_SDK_PWD_directory }}/"
+    register: out
+    when:
+      - sgx_sdk_version_installed is not skipped
+      - " intel_sgx_SDK_PWD_version not in sgx_sdk_version_installed['content'] | b64decode | trim "
+
+  - name: If SGX SDK mismatch detected - create a symbolic link for sgxsdk
+    file:
+      src: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_SDK_PWD_directory }}/linux/installer/bin/sgxsdk"
+      dest: "{{ intel_sgx_umbrella_directory }}/sgxsdk"
+      state: link
+    when:
+      - sgx_sdk_version_installed is not skipped
+      - " intel_sgx_SDK_PWD_version not in sgx_sdk_version_installed['content'] | b64decode | trim "
+
+  - name: If SGX SDK mismatch detected - install SGX PSW desired version
+    script: install-sgx-psw.sh {{ linux_distro_name }}
+    args:
+      chdir: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_SDK_PWD_directory }}/"
+    register: out
+    when:
+      - sgx_sdk_version_installed is not skipped
+      - " intel_sgx_SDK_PWD_version not in sgx_sdk_version_installed['content'] | b64decode | trim "
+
+  - name: If SGX SDK mismatch detected - update aesm service
+    script: install-sgx-aesm.sh {{ linux_distro_name }}
+    when:
+      - sgx_sdk_version_installed is not skipped
+      - " intel_sgx_SDK_PWD_version not in sgx_sdk_version_installed['content'] | b64decode | trim "
+
+  - name: If SGX SDK mismatch detected - update the txt file with the new sgx driver version
+    copy:
+      content: "sgx_{{intel_sgx_SDK_PWD_version }}\n"
+      dest: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_sdk_psw_linked_version_filename }}"
+      force: yes
+    when:
+      - sgx_sdk_version_installed is not skipped
+      - " intel_sgx_SDK_PWD_version not in sgx_sdk_version_installed['content'] | b64decode | trim "
+
+  # Tests
+  - name: Smoke test to check that sgx driver and sdk work properly
+    script: intel-sgx-smoke-test.sh
+    args:
+      chdir: "{{ intel_sgx_umbrella_directory }}/sgxsdk"
+    register: intel_sgx_smoke_test
+    when: "'developmentServersSGX' in group_names"
+    changed_when: False
+
+  - name: Smoke test results...
+    debug:
+      msg: "Success: Intel SGX driver and SDK seem to work properly"
+    when:
+      - "'developmentServersSGX' in group_names"
+      - "'SampleEnclave successfully returned' in intel_sgx_smoke_test.stdout"
+    changed_when: False
+
+  - name: Smoke test results...
+    debug:
+      msg: "Error! Something is fishy with intel sgx driver and/or SDK !!"
+    when:
+      - "'developmentServersSGX' in group_names"
+      - "'SampleEnclave successfully returned' not in intel_sgx_smoke_test.stdout"
+    changed_when: False
+
+  - name: Smoke test to check that sgx driver and sdk work properly (in simulation mode)
+    script: intel-sgx-smoke-test-simulation.sh
+    args:
+      chdir: "{{ intel_sgx_umbrella_directory }}/sgxsdk"
+    register: intel_sgx_smoke_test_simulation
+    when: "'buildServersSGX' in group_names"
+    changed_when: False
+
+  - name: Smoke test results (in simulation mode)
+    debug:
+      msg: "Success: Intel SGX driver and SDK seem to work properly"
+    when:
+      - "'buildServersSGX' in group_names"
+      - "'SampleEnclave successfully returned' in intel_sgx_smoke_test_simulation.stdout"
+    changed_when: False
+
+  - name: Smoke test results (in simulation mode)
+    debug:
+      msg: "Error! Something is fishy with intel sgx driver and/or SDK !!"
+    when:
+      - "'buildServersSGX' in group_names"
+      - "'SampleEnclave successfully returned' not in intel_sgx_smoke_test_simulation.stdout"
+    changed_when: False
+
+  # Welcome message
+  - name: Setup welcome message
+    template:
+      src: sgx-version.j2
+      dest: "/etc/profile.d/sgx-version.sh"
+      mode: '0755'
+      owner: root
+      group: root
+      force: yes

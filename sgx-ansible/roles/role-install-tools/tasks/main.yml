@@ -1,0 +1,35 @@
+---
+# tasks file for role-install-tools
+- name: Install tools
+  apt:
+      name: ['git',
+            'nano',
+            'tmux',
+            'zsh',
+            'snapd',
+            'micro',
+            'cmake',
+            'pkg-config',
+            'libssl-dev',
+            'clang',
+            'libclang-dev',
+            'llvm',
+            'unzip',
+            'python',
+            'wget',
+            'perl']
+      state: present
+      update_cache: yes
+      cache_valid_time: 3600 #one hour
+
+- name: Install LLVM v10
+  script: install-llvm.sh LLVM_VERSION = {{ llvm_version }}
+
+- name: Source llvm-ar-10 and clang-10 for everyone
+  template:
+    src: substrate-cc_and_ar.j2
+    dest: "/etc/profile.d/substrate-cc_and_ar.sh"
+    mode: '0755'
+    owner: root
+    group: root
+    force: yes
