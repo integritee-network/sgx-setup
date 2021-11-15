@@ -113,7 +113,7 @@ The meaning of the output value is listed here:
 ```
 
 
-# Intel sgx driver not available anymore after a kernel update
+# Intel sgx driver not available anymore
 If the system was updated (for example due to a restart), it may be that the intel sgx driver is not reloaded and no sgx-device is available anymore.
 
 The kernel version can be checked with:
