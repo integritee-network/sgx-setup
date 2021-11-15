@@ -59,13 +59,14 @@ To do a dry-run, execute the upper command with the options `--check --diff`.
 
 ## Check if SGX is enabled
 Smoke Tests are failing even though sgx driver and sdk have been successfully installed? Then maybe sgx is not enabled in the BIOS.
-To check if sgx is enabled in your BIOS you can do the following (only after running the sgx-ansible script)
+To check this you can do the following (credit for this how-to goes to http://xiangyi.pro/2020/enable-software-controled-sgx-in-ubuntu/):
 
-(Credit for this how-to goes to http://xiangyi.pro/2020/enable-software-controled-sgx-in-ubuntu/)
-
-Inside `linux-sgx/sdk/libcapable/linux/` run: `make` and write & save a script named
-
-`enable_sw_sgx.cpp`
+Execute the intel linux-sgx `sgx_capable` script by running:
+```bash
+cd /opt/intel/linux-sgx_2.14/sdk/libcapable/linux/
+make
+```
+Then, in the same folder, create a script named `enable_sw_sgx.cpp` with the following content:
 ```cpp
 #include <stdio.h>
 #include "../../../common/inc/sgx_capable.h"
@@ -84,7 +85,7 @@ int main()
    return 0;
 }
 ```
-The functions `sgx_is_capable` and `sgx_cap_enable_device` are declared in `linux-sgx/common/inc/sgx_capable.h` and implemented in `linux-sgx/sdk/libcapable/linux/` (https://github.com/intel/linux-sgx/blob/master/common/inc/sgx_capable.h)
+The functions `sgx_is_capable` and `sgx_cap_enable_device` are declared in `linux-sgx_2.14/common/inc/sgx_capable.h` and implemented in `linux-sgx_2.14/sdk/libcapable/linux/` (https://github.com/intel/linux-sgx/blob/master/common/inc/sgx_capable.h)
 
 Compile this script by running
 ```bash
