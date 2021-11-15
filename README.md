@@ -36,25 +36,23 @@ The other roles (such as the munin-node, timezone and keyboard roles) are not ye
  In case they did not, but the script executed without any errors, take a look at section [Check if sgx is enabled in BIOS](https://github.com/integritee-network/sgx-setup/tree/add-readme#check-if-sgx-is-enabled). If that is not the error, create an [issue](https://github.com/integritee-network/sgx-setup/issues/new) so we can try to help you out.
 5. Seting up Users:
     1. Save the public key of the user in [sgx-setup/sgx-ansible/files/users/keys](https://github.com/integritee-network/sgx-setup/tree/main/sgx-ansible/files/users/keys), just like the  [example.users.pub](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/files/users/keys/example.user.pub)
-    2. Save the user in the [group_vars](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/group_vars/developmentServersSGX.yml), just like it has been done for the Example User.
+    2. Note down the user in the [sgx-ansible/group_vars/developmentServersSGX.yml](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/group_vars/developmentServersSGX.yml), just like it has been done for the Example User.
     3. Activate the role in [role-singleplatform-eng.users](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml#L18) and execute it.
 
 
 ## Ansible Script Execution
 
-This ansible playbook was used to configure the SGX Linux Server.
-
 To execute the playbook, simply execute:
 ```bash
-ansible-playbook site.yml -i yourhosts -k
+ansible-playbook site.yml -i sgxhosts -k
 ```
-The option `-k` is used to ask for the connection (SSH) password.
+The option `-k` is used to ask for the connection (SSH) password. This will execute all activated roles in [DevelopmentServersSGX.yml](https://github.com/integritee-network/sgx-setup/blob/add-readme/sgx-ansible/DevelopmentServersSGX.yml) and [BuildServersSGX.yml](https://github.com/integritee-network/sgx-setup/blob/add-readme/sgx-ansible/BuildServersSGX.yml).
 
-Use the command to only update the host `examplehost*` (recommoended):
+To only update specific hosts, use the following (adapt `examplehost*`according to your host name):
 ```bash
 ansible-playbook site.yml -i sgxhosts -l "examplehost*" -k
 ```
-*List affected hosts and dry-run*
+### List affected hosts and dry-run
 To show which host will be provisioned, execute the upper command with the option `--list-hosts`.
 
 To do a dry-run, execute the upper command with the options `--check --diff`.
