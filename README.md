@@ -9,7 +9,7 @@ In this tutorial, the development server is focused on. The following roles are 
 - `role-install-tools`: Installs a basic toolbox necessary to install sgxsdk and driver. The tools that will be installed can be checked out [here](https://github.com/integritee-network/sgx-setup/blob/add-readme/sgx-ansible/roles/role-install-tools/tasks/main.yml).
 - `role-andrewrothstein.gcc-toolbox`: Installs gcc, necessary to install sgxsdk and driver.
 - `role-intel-sgx`: For more information take a look at its dedicated [README](https://github.com/integritee-network/sgx-setup/tree/add-readme/sgx-ansible/roles/role-intel-sgx)
-- `role-singleplatform-eng.users`: Needed to set up user. Not necessary to actually run a sgx-machine but is recommended in case of multiple users accessing the same machine.
+- `role-singleplatform-eng.users`: Needed to set up user accounts. Not necessary to actually run a sgx-machine but is recommended in case of multiple users accessing the same machine.
 
 The other roles (such as the munin-node, timezone and keyboard roles) are not yet tested for ubunutu 20.04 and might be outdated. They will most likely be updated at a later point of time. If urgently needed, take a look at https://github.com/geerlingguy , up-to-date ansible scripts should be found there.
 
