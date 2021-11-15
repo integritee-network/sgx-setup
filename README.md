@@ -42,13 +42,13 @@ The other roles (such as the munin-node, timezone and keyboard roles) are not ye
 
 ## Ansible Script Execution
 
-To execute the playbook, simply execute:
+To start the playbook, simply execute:
 ```bash
 ansible-playbook site.yml -i sgxhosts -k
 ```
 The option `-k` is used to ask for the connection (SSH) password. This will execute all activated roles in [DevelopmentServersSGX.yml](https://github.com/integritee-network/sgx-setup/blob/add-readme/sgx-ansible/DevelopmentServersSGX.yml) and [BuildServersSGX.yml](https://github.com/integritee-network/sgx-setup/blob/add-readme/sgx-ansible/BuildServersSGX.yml).
 
-To only update specific hosts, use the following (adapt `examplehost*`according to your host name):
+To update specific hosts only, use the following command (adapt `examplehost*` according to your host name):
 ```bash
 ansible-playbook site.yml -i sgxhosts -l "examplehost*" -k
 ```
