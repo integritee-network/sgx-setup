@@ -1,4 +1,4 @@
-## Requirements
+# Requirements
 * Ansible v2.8 is required on your HOST (provisioner) system.
 * You must have `sshpass` installed on your HOST (provisioner) not on the GUEST (machine(s) being provisioned).
 * the GUEST machine must be on Ubuntu 20.04 (still oparating on ubuntu 18.04? Contact us, we have a script for that one as well)
@@ -10,11 +10,11 @@ There are two different `ansible.yml` files:
 
 In this tutorial, the development server is focused on. A build server tutorial might follow later.
 
-## Important Notice
+# Important Notice
 Currently, some ansible scripts (such as the munin-node, timezone and keyboard roles) are outdated. These are not necesary for the set up of a sgx machine but are good extra features. They might be updated at a later point of time. If urgently needed, take a look at https://github.com/geerlingguy , up-to-date ansible scripts should be found there.
 
 
-## Step by Step (Development Server)
+# Step by Step (Development Server)
 * Add your server to the [host variables](https://github.com/integritee-network/sgx-setup/tree/main/sgx-ansible/host_vars). An example host can be found in [sgx-ansible/host_vars/examplehost.domain-ad.example.ch.yml](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/host_vars/examplehost.domain-ad.example.ch.yml). Set the `ansible_user` and `ansible_host` according to your sgx-server name. Ignore the netplan, munin-node, pkcs12 and nginx information for now. This will only become important when actually setting up these tools, which is not yet supported.
 * Install the basic tools on your host system by running the ansible install-tools :
     1. Activate the [role-install-tools](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml#L19) in [DevelopmentServersSGX.yml](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml)
@@ -33,7 +33,7 @@ Currently, some ansible scripts (such as the munin-node, timezone and keyboard r
     4. Execute the script according to [Ansible Script Execution](ansible-script-execution).
 
 
-## Ansible Script Execution
+# Ansible Script Execution
 
 This ansible playbook was used to configure the SGX Linux Server.
 
@@ -47,19 +47,20 @@ Use the command to only update the host `examplehost*` (recommoneded):
 ```bash
 ansible-playbook site.yml -i sgxhosts -l "examplehost*" -k
 ```
-# List affected hosts and dry-run
+*List affected hosts and dry-run*
 To show which host will be provisioned, execute the upper command with the option `--list-hosts`.
 
 To do a dry-run, execute the upper command with the options `--check --diff`.
 
-## Check if SGX is enabled
+# Check if SGX is enabled
 Smoke Tests are failing even though sgx driver and sdk have been successfully installed? Then maybe sgx is not enabled in the BIOS.
 To check if sgx is enabled in your BIOS you can do the following (only after running the sgx-ansible script)
 
 (Credit for this how to goes to http://xiangyi.pro/2020/enable-software-controled-sgx-in-ubuntu/)
 
 Inside `linux-sgx/sdk/libcapable/linux/` run: `make` and write & safe a skript named
-# enable_sw_sgx.cpp
+
+`enable_sw_sgx.cpp`
 ```cpp
 #include <stdio.h>
 #include "../../../common/inc/sgx_capable.h"
