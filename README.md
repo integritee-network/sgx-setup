@@ -22,11 +22,12 @@ The other roles (such as the munin-node, timezone and keyboard roles) are not ye
 ## Steps
 
 1. Add your server credentials as a file to the [sgx-setup/sgx-ansible/host_vars/](https://github.com/integritee-network/sgx-setup/tree/main/sgx-ansible/host_vars). An example host can be found in [sgx-ansible/host_vars/examplehost.domain-ad.example.ch.yml](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/host_vars/examplehost.domain-ad.example.ch.yml). Set the `ansible_user` and `ansible_host` according to your sgx-server name:
-```yml
-ansible_user: examplehost
-ansible_host: examplehost.domain-ad.example.ch
-```
- Ignore the netplan, munin-node, pkcs12 and nginx information for now. This will only become important when actually setting up these tools, which is not yet supported.
+    ```yml
+    ansible_user: examplehost
+    ansible_host: examplehost.domain-ad.example.ch
+    ```
+    Ignore the netplan, munin-node, pkcs12 and nginx information for now. This will only become important when actually setting up these tools, which is not yet supported.
+
 2. Install the basic tools on your host system by running the ansible install-tools :
     1. Activate the [role-install-tools](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml#L19) in [DevelopmentServersSGX.yml](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml)
     2. Execute the script according to [Ansible Script Execution](https://github.com/integritee-network/sgx-setup/tree/add-readme#ansible-script-execution).
