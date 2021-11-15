@@ -33,7 +33,6 @@ The other roles (such as the munin-node, timezone and keyboard roles) are not ye
     2. Execute the script according to [Ansible Script Execution](https://github.com/integritee-network/sgx-setup/tree/add-readme#ansible-script-execution).
 3. Install gcc-tools by activating the [role-andrewrothstein.gcc-toolbox](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml#L20) (don't forget to recomment previously executed roles) and execute it, just like before.
 4. Finally activate the [role-intel-sgx](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml#L22) and execute it as well. This might take some time (30 minutes on fast machines). In case the smoke tests have passed: Congratulation: You have successfully set up an sgx machine :)
-
  In case they did not, but the script executed without any errors, take a look at section [Check if sgx is enabled in BIOS](https://github.com/integritee-network/sgx-setup/tree/add-readme#check-if-sgx-is-enabled). If that is not the error, create an [issue](https://github.com/integritee-network/sgx-setup/issues/new) so we can try to help you out.
 5. Seting up Users:
     1. Save the public key of the user in [sgx-setup/sgx-ansible/files/users/keys](https://github.com/integritee-network/sgx-setup/tree/main/sgx-ansible/files/users/keys), just like the  [example.users.pub](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/files/users/keys/example.user.pub)
