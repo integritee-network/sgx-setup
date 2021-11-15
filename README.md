@@ -93,7 +93,7 @@ $ gcc enable_sw_sgx.cpp -o enable_sw_sgx -L. -lsgx_capable
 $ sudo LD_LIBRARY_PATH=. ./C
 ```
 
-The output should like:
+The output should look something like:
 ```bash
 $ sudo LD_LIBRARY_PATH=. ./enable_sw_sgx
 is_sgx_capable: 1
