@@ -1,0 +1,34 @@
+---
+ansible_user: examplehost
+ansible_host: examplehost.domain-ad.example.ch
+ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+ansible_python_interpreter: "/usr/bin/python3"
+
+# netplan configuration, used by role-mrlesmithjr.netplan
+# the main modification is to make sure ubuntu sends the mac address to the dhcp server, in order to
+# get the static IP
+netplan_configuration:
+    network:
+      version: 2
+      ethernets:
+        eno1:
+          addresses:
+          - 192.0.0.0/0
+          gateway4: 192.0.0.1
+          nameservers:
+            addresses:
+            - 192.0.0.1
+
+munin_node_allowed_ips:
+  - '^172\.0\.0\.0$'
+  - '^127\.0\.0\.0$'
+
+certificate_pkcs12:
+  - pkcs12_file: "examplehost.pfx"
+    crt: "{{ ansible_fqdn }}.pem"
+    private: "{{ ansible_fqdn }}.key"
+    pkcs12_pass: "{{ pkcs12_password }}"
+
+nginx_displayed_server_name: "{{ ansible_host }}.{{ ansible_domain }}"
+nginx_used_ssl_cer_crt: "{{ certificate_dir_certs }}/{{ certificate_pkcs12.0.crt }}"
+nginx_used_ssl_cer_key: "{{ certificate_dir_private }}/{{ certificate_pkcs12.0.private }}"

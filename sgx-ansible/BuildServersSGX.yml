@@ -1,0 +1,20 @@
+---
+- hosts: buildServersSGX
+  vars_prompt:
+    - name: "ansible_sudo_pass"
+      prompt: "Sudo password (build servers)"
+      private: yes
+  pre_tasks:
+    - name: Ping remote servers
+      ping:
+
+  roles:
+    # - { role: role-gantsign.keyboard, become: yes }
+    # - { role: role-manala.timezone, become: yes }
+    # - { role: role-singleplatform-eng.users, become: yes }
+    # - { role: role-install-tools, become: yes }
+    # - { role: role-andrewrothstein.gcc-toolbox, become: yes }
+    # - { role: role-geerlingguy.docker, become: yes }
+    # - { role: role-intel-sgx, become: yes }
+    # - { role: role-geerlingguy.munin-node, become: yes}
+    # - { role: role-geerlingguy.gitlab, become: yes}

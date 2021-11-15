@@ -1,0 +1,22 @@
+server {
+    {% block server_begin %}{% endblock %}
+    {% block server_basic -%}
+    listen {{ item.listen }};
+    listen [::]:{{ item.listen }} default_server;
+    {% if item.server_name is defined %}
+    server_name {{ item.server_name }};
+    {% endif %}
+    {% if item.return is defined %}
+    return {{ item.return }};
+    {% endif %}
+    {% endblock %}
+
+    ssl_certificate {{item.ssl_cert_pem}};
+    ssl_certificate_key {{item.ssl_cert_key}};
+    ssl_ciphers {{item.ssl_ciphers}};
+    ssl_protocols {{item.ssl_protocols}};
+
+    {% if item.extra_parameters is defined %}
+    {{ item.extra_parameters|indent(4) }}
+    {% endif %}
+}

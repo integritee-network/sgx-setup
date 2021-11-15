@@ -1,0 +1,14 @@
+---
+# certificate vars for FreeBSD
+
+certificate_packages: "{{ certificate_packages_freebsd }}"
+
+# directories
+certificate_group: "wheel"
+certificate_dir_private_group: "wheel"
+certificate_dir_private_mode: "0700"
+certificate_link_crt: False
+certificate_acme_link_crt: False
+
+# EOF
+...

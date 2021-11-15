@@ -1,0 +1,5 @@
+[developmentServersSGX]
+examplehost.domain-ad.example.ch
+
+[buildServersSGX]
+examplehost.domain-ad.example.ch

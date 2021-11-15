@@ -1,0 +1,14 @@
+---
+# certificate vars for RedHat
+
+certificate_packages: "{{ certificate_packages_redhat }}"
+
+# directories
+certificate_group: "root"
+certificate_dir_private_group: "root"
+certificate_dir_private_mode: "0700"
+certificate_link_crt: True
+certificate_acme_link_crt: False
+
+# EOF
+...

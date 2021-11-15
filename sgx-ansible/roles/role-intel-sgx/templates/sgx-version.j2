@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# the logo was created with http://www.network-science.de/ascii/
+
+export TERM=putty-256color
+THIS_USER=$(whoami)
+
+echo "$(tput setaf 2)"
+echo "    .___                               "
+echo "  __| _/_______  ________ _______  ___ "
+echo " / __ |/ __ \  \/ /  ___// ___\  \/  / "
+echo "/ /_/ \  ___/\   /\___ \/ /_/  >    <  "
+echo "\____ |\___  >\_//____  >___  /__/\_ \ "
+echo "     \/    \/         \/_____/      \/ "
+echo ""
+echo "The following versions are installed on this machine:"
+echo "- Intel SGX driver: DCAP " {{ intel_DCAP_DRIVER_version }}
+echo "- Intel SGX SDK and PSW:" {{ intel_sgx_SDK_PWD_version }}
+echo ""
+echo "$(tput sgr0)"
