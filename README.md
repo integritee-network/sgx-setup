@@ -64,7 +64,7 @@ To check this you can do the following (credit for this how-to goes to http://xi
 Execute the intel linux-sgx `sgx_capable` script by running:
 ```bash
 cd /opt/intel/linux-sgx_2.14/sdk/libcapable/linux/
-make
+sudo make
 ```
 Then, in the same folder, create a script named `enable_sw_sgx.cpp` with the following content:
 ```cpp
@@ -89,8 +89,7 @@ The functions `sgx_is_capable` and `sgx_cap_enable_device` are declared in `linu
 
 Compile this script by running
 ```bash
-$ gcc enable_sw_sgx.cpp -o enable_sw_sgx -L. -lsgx_capable
-$ sudo LD_LIBRARY_PATH=. ./C
+$ sudo gcc enable_sw_sgx.cpp -o enable_sw_sgx -L. -lsgx_capable
 ```
 
 The output should look something like:
