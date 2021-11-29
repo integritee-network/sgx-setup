@@ -18,6 +18,7 @@ The other roles (such as the munin-node, timezone and keyboard roles) are not ye
 * You must have `sshpass` installed on your HOST (provisioner) not on the GUEST (machine(s) being provisioned).
 * the GUEST machine must be on Ubuntu 20.04 (still oparating on Ubuntu 18.04? Contact us, we have a script for that one as well)
 * SGX must be enabled in your BIOS
+* Processor must support FLC (don't know about that? check out this [section](https://github.com/integritee-network/sgx-setup/tree/add-readme#check-for-flc-support))
 
 ## Steps
 
