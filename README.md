@@ -110,7 +110,14 @@ The meaning of the output value is listed here:
 * SGX_DISABLED_HYPERV_ENABLED = 6, /* Detected an unsupported version of Windows* 10 with Hyper-V enabled */
 * SGX_DISABLED_UNSUPPORTED_CPU = 7, /* SGX is not supported by this CPU */
 ```
+## Check for FLC support
+To use DCAP, the processor must support Flexible Launch Control (FLC). To check if that's the case you can do the following:
 
+On a Linux* system, execute [cpuid](http://manpages.ubuntu.com/manpages/cosmic/man1/cpuid.1.html) in a terminal:
+- Open a terminal and run: `$ cpuid | grep -i sgx`
+- Look for output: `SGX_LC: SGX launch config supported = true`
+
+More information / ways to check for FLC support can be found directly on the [intel homepage](https://www.intel.com/content/www/us/en/support/articles/000057420/software/intel-security-products.html).
 
 # Intel sgx driver not available anymore
 If the system was updated (for example due to a restart), it may be that the intel sgx driver is not reloaded and no sgx-device is available anymore.
