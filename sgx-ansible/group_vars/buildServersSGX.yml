@@ -55,7 +55,7 @@ intel_sgx_driver_installed_version_filename: "installed-intel-sgx-driver-version
 
 # the version of the intel sgx for linux
 # provide the selected version from https://download.01.org/intel-sgx/sgx-linux/
-intel_sgx_SDK_PWD_version: "2.14"
+intel_sgx_SDK_PWD_version: "2.15.1"
 
 intel_sgx_SDK_PWD_directory: "linux-{{ intel_sgx_SDK_PWD_version }}"
 intel_sgx_sdk_psw_linked_version_filename: "linked-sgx-sdk-version.txt"
