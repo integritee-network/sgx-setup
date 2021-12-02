@@ -295,3 +295,14 @@
       owner: root
       group: root
       force: yes
+
+    # Clean up
+  - name: Delete intel specific binutil versions
+    file:
+      path: "/usr/local/bin/{{ item }}"
+      state: absent
+    with_items:
+      - as
+      - ld
+      - ld.gold
+      - objdump

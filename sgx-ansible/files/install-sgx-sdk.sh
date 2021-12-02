@@ -18,8 +18,3 @@ expect \" :\"
 send \"yes\r\";
 interact;
 ")
-
-
-# clean up afterwards
-cd /usr/local/bin
-sudo rm -r {as,ld,ld.gold,objdump}
