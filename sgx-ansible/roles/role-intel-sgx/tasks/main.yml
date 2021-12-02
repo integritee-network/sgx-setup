@@ -79,7 +79,6 @@
     when:
       - sgx_driver_kernel_version_installed is not skipped
       - " intel_DRIVER_version not in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
-      # - " kernel_version.stdout in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
 
   - name: If SGX driver mismatch detected - get the desired SGX-Driver version
     get_url:
@@ -88,7 +87,6 @@
     when:
       - sgx_driver_kernel_version_installed is not skipped
       - " intel_DRIVER_version not in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
-      # - " kernel_version.stdout in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
 
   - name: If SGX driver mismatch detected - install the desired SGX-Driver version
     script: intel-sgx-install-driver.sh {{ intel_DRIVER_version }}
@@ -97,7 +95,6 @@
     when:
       - sgx_driver_kernel_version_installed['content'] is defined
       - " intel_DRIVER_version not in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
-      # - " kernel_version.stdout in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
 
   - name: If SGX driver mismatch detected - update the txt file with the new sgx driver version
     template:
@@ -107,7 +104,6 @@
     when:
       - sgx_driver_kernel_version_installed is not skipped
       - " intel_DRIVER_version not in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
-      # - " kernel_version.stdout in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
 
   - name: "Detect if there is a mismatch in the kernel version --> install the driver at the new version"
     script: intel-sgx-install-driver.sh {{ intel_DRIVER_version }}
@@ -127,7 +123,7 @@
       - " kernel_version.stdout not in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
 
   # SDK & PSW
-  - name: Install dependencies for SGX SDK and SGX PSW and AESM service
+  - name: Install dependencies for SGX SDK and SGX PSW service
     apt:
        name: ['build-essential',
               'ocaml',
@@ -184,11 +180,6 @@
     register: out
     when: intel_sgx_sdk_psw_exists.stat.exists == false
 
-  # AESM
-  - name: Install AESM service
-    script: install-sgx-aesm.sh {{ linux_distro_name }}
-    when: intel_sgx_sdk_psw_exists.stat.exists == false
-
   - name: Create a txt file including the sgx sdk version installed, in case it doesn't exist at all
     copy:
       content: "sgx_{{intel_sgx_SDK_PWD_version }}\n"
@@ -233,12 +224,6 @@
     args:
       chdir: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_SDK_PWD_directory }}/"
     register: out
-    when:
-      - sgx_sdk_version_installed is not skipped
-      - " intel_sgx_SDK_PWD_version not in sgx_sdk_version_installed['content'] | b64decode | trim "
-
-  - name: If SGX SDK mismatch detected - update aesm service
-    script: install-sgx-aesm.sh {{ linux_distro_name }}
     when:
       - sgx_sdk_version_installed is not skipped
       - " intel_sgx_SDK_PWD_version not in sgx_sdk_version_installed['content'] | b64decode | trim "
