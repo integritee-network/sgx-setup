@@ -72,8 +72,16 @@
     register: sgx_driver_kernel_version_installed
     when: intel_sgx_driver_exists.stat.exists
 
+  - name: If only SGX driver mismatch detected - uninstall aesm service (necessary to uninstall driver)
+    apt:
+       name: sgx-aesm-service
+       state: absent
+    when:
+      - sgx_driver_kernel_version_installed is not skipped
+      - " intel_DRIVER_version not in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
+
   - name: If only SGX driver mismatch detected - uninstall old sgx driver version
-    command: ./uninstall
+    command: ./uninstall.sh
     args:
       chdir: "{{ intel_sgx_umbrella_directory }}/sgxdriver/"
     when:
@@ -101,6 +109,14 @@
       src: installed-sgx-driver-and-kernel-vers.j2
       dest: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_driver_installed_version_filename }}"
       force: yes
+    when:
+      - sgx_driver_kernel_version_installed is not skipped
+      - " intel_DRIVER_version not in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
+
+  - name: If only SGX driver mismatch detected - reinstall aesm service
+    apt:
+      name: sgx-aesm-service
+      state: present
     when:
       - sgx_driver_kernel_version_installed is not skipped
       - " intel_DRIVER_version not in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
