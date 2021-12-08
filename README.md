@@ -18,7 +18,7 @@ The other roles (such as the munin-node, timezone and keyboard roles) are not ye
 * You must have `sshpass` installed on your HOST (provisioner) not on the GUEST (machine(s) being provisioned).
 * the GUEST machine must be on Ubuntu 20.04 (still oparating on Ubuntu 18.04? Contact us, we have a script for that one as well)
 * SGX must be enabled in your BIOS
-* Processor must support FLC (don't know about that? check out this [section](https://github.com/integritee-network/sgx-setup/tree/main#check-for-flc-support))
+* Processor must support FLC (don't know about that? check out this [section](https://github.com/integritee-network/sgx-setup#check-for-flc-support))
 
 ## Steps
 
@@ -33,7 +33,7 @@ The other roles (such as the munin-node, timezone and keyboard roles) are not ye
 
 2. Install the basic tools on your host system by running the ansible install-tools :
     1. Activate the [role-install-tools](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml#L19) in [DevelopmentServersSGX.yml](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml)
-    2. Execute the script according to [Ansible Script Execution](https://github.com/integritee-network/sgx-setup/tree/main#ansible-script-execution).
+    2. Execute the script according to [Ansible Script Execution](https://github.com/integritee-network/sgx-setup#ansible-script-execution).
 3. Install gcc-tools by activating the [role-andrewrothstein.gcc-toolbox](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml#L20) (don't forget to recomment previously executed roles) and execute it, just like before.
 4. Finally activate the [role-intel-sgx](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml#L22) and execute it as well. This might take some time (30 minutes on fast machines). In case the smoke tests have passed: Congratulation: You have successfully set up an sgx machine :)
  In case they did not, but the script executed without any errors, take a look at section [Check if sgx is enabled in BIOS](https://github.com/integritee-network/sgx-setup/tree/main#check-if-sgx-is-enabled). If that is not the error, create an [issue](https://github.com/integritee-network/sgx-setup/issues/new) so we can try to help you out.
