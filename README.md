@@ -29,6 +29,8 @@ The other roles (such as the munin-node, timezone and keyboard roles) are not ye
     ```
     Ignore the netplan, munin-node, pkcs12 and nginx information for now. This will only become important when actually setting up these tools, which is not yet supported in this tutorial.
 
+    After adding the file, you also need to add it to [sgxhosts](https://github.com/integritee-network/sgx-setup/blob/add-readme/sgx-ansible/sgxhosts) as a development or build server. Depending on where you add it to, the `BuildServersSGX.yml` or `DevelopmentServersSGX.yml` file will be executed for your server.
+
 2. Install the basic tools on your host system by running the ansible install-tools :
     1. Activate the [role-install-tools](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml#L19) in [DevelopmentServersSGX.yml](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/DevelopmentServersSGX.yml)
     2. Execute the script according to [Ansible Script Execution](https://github.com/integritee-network/sgx-setup/tree/add-readme#ansible-script-execution).
