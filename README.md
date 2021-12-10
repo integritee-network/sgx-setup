@@ -16,9 +16,12 @@ The other roles (such as the munin-node, timezone and keyboard roles) are not ye
 ## Requirements
 * Ansible v2.8 is required on your HOST (provisioner) system.
 * You must have `sshpass` installed on your HOST (provisioner) not on the GUEST (machine(s) being provisioned).
-* the GUEST machine must be on Ubuntu 20.04 (still oparating on Ubuntu 18.04? Contact us, we have a script for that one as well)
+* The GUEST machine must be on Ubuntu
 * SGX must be enabled in your BIOS
-* Processor must support FLC (don't know about that? check out this [section](https://github.com/integritee-network/sgx-setup#check-for-flc-support))
+
+### Before starting
+* Check if your processor supports FLC (don't know about that? check out this [section](https://github.com/integritee-network/sgx-setup#check-for-flc-support))
+* This script was tested on Ubuntu 20.04 but it should also support different Ubuntu versions. In case it does not work, please contact us.
 
 ## Steps
 
