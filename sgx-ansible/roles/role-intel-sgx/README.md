@@ -28,7 +28,7 @@ This variable defines the version of the SDK and PWD that will be installed. Thi
 intel_sgx_SDK_PWD_directory: "linux-sgx_{{ intel_sgx_SDK_PWD_version }}"
 This variable defines the directory, where SDK and PWD. This directory is now associated with the sdk_version, to avoid overwriting a previous version with a newer one. However, it can be further modified, to install the same sdk version with possibly different make options.
 
-intel_DRIVER_version: '2.14'
+intel_DRIVER_version: '1.41'
 This variable defines the version of the sgx driver that will be installed. This has to be a valid version, for more info look at the official github page here: https://github.com/intel/linux-sgx-driver/releases
 
 intel_sgx_DRIVER_directory: "linux-{{ intel_DRIVER_version }}_driver"
