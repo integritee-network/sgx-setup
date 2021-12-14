@@ -26,19 +26,36 @@ docker_users: [ 'uexample' ]
 # the following variables refer to role-intel-sgx
 intel_sgx_umbrella_directory: "/opt/intel"
 
-# the version of the intel DCAP sgx driver for linux
+# Intel provides three differnt driver versions: In-Kernel, DCAP and Out-of-tree Driver.
+# According to the intel intallation guide (<https://download.01.org/intel-sgx/sgx-linux/2.14/docs/Intel_SGX_SW_Installation_Guide_for_Linux.pdf>)
+# 1. In-kernel Driver: Mainline kernel release 5.11 or higher
+#   includes the SGX In-Kernel driver. The In-Kernel Driver requires the platform to support and to
+#   be configured for Flexible Launch Control (FLC).
+# 2. DCAP Driver: The goal of the DCAP driver is to provide an
+#   interface close to the In-kernel Driver in order to provide Intel® SGX support to Linux OSs that do
+#   not have the Intel® SGX driver built into the kernel. This driver also requires the platform to
+#   support and to be configured for Flexible Launch Control.
+# 3. Out-of-tree Driver (/dev/isgx): This driver is provided to support running Intel® SGX enclaves on
+#   platforms that only support Legacy Launch Control.  It may also be installed on platforms
+#   configured with Flexible Launch Control; however, then these platforms will only load enclaves
+#   that conform to the Legacy Launch Control Policy.
+
+# The version of the intel sgx driver for linux.
 # provide the version from https://download.01.org/intel-sgx/sgx-linux/{{intel_sgx_SDK_PWD_version}}/distro/ubuntu20.04-server/
 # example: https://download.01.org/intel-sgx/sgx-linux/2.14/distro/ubuntu20.04-server/
-# Sidenote: Driver version will not be updated anymore - 1.41 (according to intel) is the last one that is not directly incoorperated into the
+# Sidenote: Driver version will not be updated anymore - v1.41 (according to intel) is the last one that is not directly incoorperated into the
 # linux main kernel (from v5.11 on)
-intel_DCAP_DRIVER_version: "1.41"
+# In case your processor does not support FLC, choose the out-of-tree driver (OOT), specified in the driver_readme.txt file.
+# example DCAP version: "1.41"
+# example OOT version: "2.11.0_2d2b795"
+intel_DRIVER_version: "1.41"
 
-intel_sgx_DRIVER_directory: "linux-{{ intel_DCAP_DRIVER_version }}"
+intel_sgx_DRIVER_directory: "linux-{{ intel_DRIVER_version }}_driver"
 intel_sgx_driver_installed_version_filename: "installed-intel-sgx-driver-version.txt"
 
 # the version of the intel sgx for linux
 # provide the selected version from https://download.01.org/intel-sgx/sgx-linux/
-intel_sgx_SDK_PWD_version: "2.14"
+intel_sgx_SDK_PWD_version: "2.15.1"
 
 intel_sgx_SDK_PWD_directory: "linux-{{ intel_sgx_SDK_PWD_version }}"
 intel_sgx_sdk_psw_linked_version_filename: "linked-sgx-sdk-version.txt"

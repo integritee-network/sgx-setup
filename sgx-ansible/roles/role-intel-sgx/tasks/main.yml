@@ -17,14 +17,14 @@
       recurse: yes
     when: intel_sgx_directory_details.stat.exists == false
 
-  # Install DCAP driver
+  # Install intel SGX driver
   - name: Check if any version of Intel SGX Driver is installed, based on the existence of a txt file
     stat:
       path: "{{ intel_sgx_umbrella_directory}}/{{ intel_sgx_driver_installed_version_filename }}"
     register: intel_sgx_driver_exists
     changed_when: False
 
-  - name: Install dependencies for intel DCAP SGX driver
+  - name: Install dependencies for intel SGX driver
     apt:
        name: ['build-essential',
               'ocaml',
@@ -35,12 +35,12 @@
               'dkms']
        state: present
 
-  - name: "Checking if Intel SGX DCAP Driver directory exists"
+  - name: "Checking if Intel SGX Driver directory exists"
     stat:
       path: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_DRIVER_directory }}"
     register: intel_sgx_driver_directory_details
 
-  - name: "Create Intel SGX DCAP Driver directory if it doesn't exist"
+  - name: "Create Intel SGX Driver directory if it doesn't exist"
     file:
       path: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_DRIVER_directory }}"
       state: directory
@@ -48,14 +48,14 @@
       recurse: yes
     when: intel_sgx_driver_directory_details.stat.exists == false
 
-  - name: Get DCAP SGX-Driver install binaries, in case it doesn't exist at all
+  - name: Get SGX driver install binaries, in case it doesn't exist at all
     get_url:
-      url: "https://download.01.org/intel-sgx/sgx-linux/{{ intel_sgx_SDK_PWD_version }}/distro/{{ linux_distro }}-server/sgx_linux_x64_driver_{{ intel_DCAP_DRIVER_version }}.bin"
+      url: "https://download.01.org/intel-sgx/sgx-linux/{{ intel_sgx_SDK_PWD_version }}/distro/{{ linux_distro }}-server/sgx_linux_x64_driver_{{ intel_DRIVER_version }}.bin"
       dest: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_DRIVER_directory }}/"
     when: intel_sgx_driver_exists.stat.exists == false
 
-  - name: Install SGX-Driver, in case it doesn't exist at all
-    script: intel-sgx-install-driver.sh {{ intel_DCAP_DRIVER_version }}
+  - name: Install SGX driver, in case it doesn't exist at all
+    script: intel-sgx-install-driver.sh {{ intel_DRIVER_version }}
     args:
       chdir: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_DRIVER_directory }}/"
     when: intel_sgx_driver_exists.stat.exists == false
@@ -78,25 +78,25 @@
       chdir: "{{ intel_sgx_umbrella_directory }}/sgxdriver/"
     when:
       - sgx_driver_kernel_version_installed is not skipped
-      - " intel_DCAP_DRIVER_version not in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
+      - " intel_DRIVER_version not in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
       # - " kernel_version.stdout in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
 
   - name: If SGX driver mismatch detected - get the desired SGX-Driver version
     get_url:
-      url: "https://download.01.org/intel-sgx/sgx-linux/{{ intel_sgx_SDK_PWD_version }}/distro/{{ linux_distro }}-server/sgx_linux_x64_driver_{{ intel_DCAP_DRIVER_version }}.bin"
+      url: "https://download.01.org/intel-sgx/sgx-linux/{{ intel_sgx_SDK_PWD_version }}/distro/{{ linux_distro }}-server/sgx_linux_x64_driver_{{ intel_DRIVER_version }}.bin"
       dest: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_DRIVER_directory }}/"
     when:
       - sgx_driver_kernel_version_installed is not skipped
-      - " intel_DCAP_DRIVER_version not in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
+      - " intel_DRIVER_version not in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
       # - " kernel_version.stdout in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
 
   - name: If SGX driver mismatch detected - install the desired SGX-Driver version
-    script: intel-sgx-install-driver.sh {{ intel_DCAP_DRIVER_version }}
+    script: intel-sgx-install-driver.sh {{ intel_DRIVER_version }}
     args:
       chdir: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_DRIVER_directory }}/"
     when:
       - sgx_driver_kernel_version_installed['content'] is defined
-      - " intel_DCAP_DRIVER_version not in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
+      - " intel_DRIVER_version not in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
       # - " kernel_version.stdout in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
 
   - name: If SGX driver mismatch detected - update the txt file with the new sgx driver version
@@ -106,11 +106,11 @@
       force: yes
     when:
       - sgx_driver_kernel_version_installed is not skipped
-      - " intel_DCAP_DRIVER_version not in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
+      - " intel_DRIVER_version not in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
       # - " kernel_version.stdout in sgx_driver_kernel_version_installed['content'] | b64decode | trim "
 
   - name: "Detect if there is a mismatch in the kernel version --> install the driver at the new version"
-    script: intel-sgx-install-driver.sh {{ intel_DCAP_DRIVER_version }}
+    script: intel-sgx-install-driver.sh {{ intel_DRIVER_version }}
     args:
       chdir: "{{ intel_sgx_umbrella_directory }}/{{ intel_sgx_DRIVER_directory }}/"
     when:
