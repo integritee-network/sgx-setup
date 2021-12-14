@@ -16,7 +16,7 @@ The other roles (such as the munin-node, timezone and keyboard roles) are not ye
 ## Requirements
 * Ansible v2.8 is required on your HOST (provisioner) system.
 * You must have `sshpass` installed on your HOST (provisioner) not on the GUEST (machine(s) being provisioned).
-* The GUEST machine must be on Ubuntu
+* The GUEST machine must be on Ubuntu 20.04 or 18.04
 * SGX must be enabled in your BIOS
 
 ### Before starting
