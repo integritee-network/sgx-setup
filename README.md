@@ -72,7 +72,8 @@ Execute the intel linux-sgx `sgx_capable` script by running:
 cd /opt/intel/linux-sgx_{intel_sgx_SDK_PWD_version}/sdk/libcapable/linux/
 sudo make
 ```
-where {intel_sgx_SDK_PWD_version} is the version number you chose in the [sgx-ansible/group_vars/developmentServersSGX.yml](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/group_vars/developmentServersSGX.yml) file.
+where `{intel_sgx_SDK_PWD_version}` is the version number you chose in the [group_vars/developmentServersSGX.yml](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/group_vars/developmentServersSGX.yml) file.
+
 Example:
 `cd /opt/intel/linux-sgx_2.15.1/sdk/libcapable/linux/`
 
@@ -95,7 +96,7 @@ int main()
    return 0;
 }
 ```
-The functions `sgx_is_capable` and `sgx_cap_enable_device` are declared in `linux-sgx_2.14/common/inc/sgx_capable.h` and implemented in `linux-sgx_2.14/sdk/libcapable/linux/` (https://github.com/intel/linux-sgx/blob/master/common/inc/sgx_capable.h)
+The functions `sgx_is_capable` and `sgx_cap_enable_device` are declared in `linux-sgx_{intel_sgx_SDK_PWD_version}/common/inc/sgx_capable.h` and implemented in `linux-sgx_{intel_sgx_SDK_PWD_version}/sdk/libcapable/linux/` (https://github.com/intel/linux-sgx/blob/master/common/inc/sgx_capable.h)
 
 Compile this script by running
 ```bash
