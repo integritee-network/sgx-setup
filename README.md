@@ -69,10 +69,15 @@ To check this you can do the following (credit for this how-to goes to http://xi
 
 Execute the intel linux-sgx `sgx_capable` script by running:
 ```bash
-cd /opt/intel/linux-sgx_2.14/sdk/libcapable/linux/
+cd /opt/intel/linux-sgx_{intel_sgx_SDK_PWD_version}/sdk/libcapable/linux/
 sudo make
 ```
-Then, in the same folder, create a script named `enable_sw_sgx.cpp` with the following content:
+where `{intel_sgx_SDK_PWD_version}` is the version number you chose in the [group_vars/developmentServersSGX.yml](https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/group_vars/developmentServersSGX.yml) file.
+
+Example:
+`cd /opt/intel/linux-sgx_2.15.1/sdk/libcapable/linux/`
+
+Then, in the same folder, create a file named `enable_sw_sgx.cpp` with the following content:
 ```cpp
 #include <stdio.h>
 #include "../../../common/inc/sgx_capable.h"
@@ -91,7 +96,7 @@ int main()
    return 0;
 }
 ```
-The functions `sgx_is_capable` and `sgx_cap_enable_device` are declared in `linux-sgx_2.14/common/inc/sgx_capable.h` and implemented in `linux-sgx_2.14/sdk/libcapable/linux/` (https://github.com/intel/linux-sgx/blob/master/common/inc/sgx_capable.h)
+The functions `sgx_is_capable` and `sgx_cap_enable_device` are declared in `linux-sgx_{intel_sgx_SDK_PWD_version}/common/inc/sgx_capable.h` and implemented in `linux-sgx_{intel_sgx_SDK_PWD_version}/sdk/libcapable/linux/` (https://github.com/intel/linux-sgx/blob/master/common/inc/sgx_capable.h)
 
 Compile this script by running
 ```bash
@@ -104,10 +109,10 @@ $ sudo LD_LIBRARY_PATH=. ./enable_sw_sgx
 is_sgx_capable: 1
 status: 1
 ```
-
-The meaning of the output value is listed here:
+`is_sgx_capable` is a boolean value. If it's `0`, your machine is not sgx capable, so it must be `1`, otherwise this script will not work.
+The meaning of the value `status` is listed here:
 ```cpp
-* SGX_ENABLED = 0
+* SGX_ENABLED = 0 /* All is good, sgx is enabled */
 * SGX_DISABLED_REBOOT_REQUIRED = 1, /* A reboot is required to finish enabling SGX */
 * SGX_DISABLED_LEGACY_OS = 2, /* SGX is disabled and a Software Control Interface is not available to enable it */
 * SGX_DISABLED = 3, /* SGX is not enabled on this platform. More details are unavailable. */
