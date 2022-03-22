@@ -17,10 +17,12 @@ The other roles (such as the munin-node, timezone and keyboard roles) are not ye
 * Ansible v2.8 is required on your HOST (provisioner) system.
 * You must have `sshpass` installed on your HOST (provisioner) not on the GUEST (machine(s) being provisioned).
 * The GUEST machine must be on Ubuntu 20.04 or 18.04
-* SGX must be enabled in your BIOS
+* SGX must be enabled in the BIOS of your GUEST machine
+
+Clarification of GUEST and HOST: The guest is the machine you want to install intel sgx sdk on. The host is the machine you're using to connect to the guest machine.
 
 ### Before starting
-* Check if your processor supports FLC (don't know about that? check out this [section](https://github.com/integritee-network/sgx-setup#check-for-flc-support))
+* Check if your GUEST machine processor supports FLC (don't know about that? check out this [section](https://github.com/integritee-network/sgx-setup#check-for-flc-support))
 * This script was tested on Ubuntu 20.04 but it should also support different Ubuntu versions. In case it does not work, please contact us.
 
 ## Steps
