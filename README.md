@@ -132,7 +132,7 @@ On a Linux* system, execute [cpuid](http://manpages.ubuntu.com/manpages/cosmic/m
 
 More information / ways to check for FLC support can be found directly on the [intel homepage](https://www.intel.com/content/www/us/en/support/articles/000057420/software/intel-security-products.html).
 
-# Intel sgx driver not available anymore
+# Intel SGX driver not available anymore
 If the system was updated (for example due to a restart), it may be that the intel sgx driver is not reloaded and no sgx-device is available anymore.
 
 The kernel version can be checked with:
@@ -140,7 +140,7 @@ The kernel version can be checked with:
 $ uname -r
 ```
 
-The installed intel sgx-driver can be checked with:
+The installed intel SGX driver can be checked with:
 ```bash
 $ cat /opt/intel/installed-intel-sgx-driver-version.txt
 ```
@@ -148,3 +148,37 @@ If the kernel version on the file and uname are different, the driver needs to b
 `role-intel-sgx` in the runbook and execute according to [Ansible Script Execution](https://github.com/integritee-network/sgx-setup#ansible-script-execution).
 
 After a login, the driver should be installed for the correct version. A reboot is not necessary.
+
+
+# Uninstall Intel SGX
+To uninstall the following steps need to be done:
+1. Uninstall sgxsdk
+```bash
+$ cd /opt/intel/sgxsdk
+$ sudo ./uninstall.sh
+$ cd /opt/intel/sgxsdk
+```
+2. Uninstall AESM
+```bash
+$ sudo service aesmd stop
+$ sudo apt remove sgx-aesm-service
+```
+3. Uninstall driver
+```bash
+$ cd /opt/intel/sgxdriver
+$ sudo ./uninstall.sh
+```
+and finally remove the intel folder and other left overs:
+```bash
+$ sudo rm -rf /opt/intel
+$ sudo apt remove '^sgx-.*' '^libsgx-.*'
+$ sudo apt autoremove
+```
+In case an older version of the OOT driver has been installed and no uninstall script is available, run the following steps:
+```bash
+$ sudo /sbin/modprobe -r isgx
+$ sudo rm -rf "/lib/modules/"`uname -r`"/kernel/drivers/intel/sgx"
+$ sudo /sbin/depmod
+$ sudo /bin/sed -i '/^isgx$/d' /etc/modules
+```
+(see https://github.com/intel/linux-sgx-driver#uninstall-the-intelr-sgx-driver)
