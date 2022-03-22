@@ -22,7 +22,7 @@ The other roles (such as the munin-node, timezone and keyboard roles) are not ye
 Clarification of GUEST and HOST: The guest is the machine you want to install intel sgx sdk on. The host is the machine you're using to connect to the guest machine.
 
 ### Before starting
-* Check if your GUEST machine processor supports FLC (don't know about that? check out this [section](https://github.com/integritee-network/sgx-setup#check-for-flc-support))
+* Check if your GUEST machine processor supports FLC (don't know about that? check out this [section](https://github.com/integritee-network/sgx-setup#check-for-flc-support)). If it does not, update the driver version accordingly: https://github.com/integritee-network/sgx-setup/blob/main/sgx-ansible/group_vars/developmentServersSGX.yml#L46-L54
 * This script was tested on Ubuntu 20.04 but it should also support different Ubuntu versions. In case it does not work, please contact us.
 
 ## Steps
