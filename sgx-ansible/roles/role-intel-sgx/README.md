@@ -9,7 +9,7 @@ ansible
 
 Role Variables
 --------------
-Intel sgx driver and SDK are now installed according to: <https://download.01.org/intel-sgx/sgx-linux/2.14/docs/Intel_SGX_SW_Installation_Guide_for_Linux.pdf> (version 2.14)
+Intel sgx driver and SDK are now installed according to: <https://download.01.org/intel-sgx/sgx-linux/2.16/docs/Intel_SGX_SW_Installation_Guide_for_Linux.pdf> (version 2.16)
 
 The driver can be uninstalled with :
 cd /opt/intel/{intel_DRIVER_version}/sgxdriver
@@ -32,7 +32,7 @@ intel_DRIVER_version: '1.41'
 This variable defines the version of the sgx driver that will be installed. This has to be a valid version, for more info look at the official github page here: https://github.com/intel/linux-sgx-driver/releases
 
 intel_sgx_DRIVER_directory: "linux-{{ intel_DRIVER_version }}_driver"
-This variable defines the directory, where sgx driver. This directory is now associated with the sgx driver version, to avoid overwriting a previous version with a newer one. However, it can be further modified. Please not that to uninstall the SGX driver, follow the uninstalling description provided in https://download.01.org/intel-sgx/sgx-linux/2.14/docs/Intel_SGX_SW_Installation_Guide_for_Linux.pdf
+This variable defines the directory, where sgx driver. This directory is now associated with the sgx driver version, to avoid overwriting a previous version with a newer one. However, it can be further modified. Please not that to uninstall the SGX driver, follow the uninstalling description provided in https://download.01.org/intel-sgx/sgx-linux/2.16/docs/Intel_SGX_SW_Installation_Guide_for_Linux.pdf
 
 
 Dependencies
