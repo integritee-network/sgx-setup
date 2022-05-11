@@ -4,7 +4,7 @@ linux_distro="$1"
 # download the prebuilt binaries
 sudo make preparation
 
-sudo cp external/toolset/$linux_distro/{as,ld,ld.gold,objdump} /usr/local/bin
+sudo cp external/toolset/$linux_distro/{as,ld,objdump} /usr/local/bin
 
 # build the installer
 sudo make sdk_install_pkg
